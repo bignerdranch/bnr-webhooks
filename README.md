@@ -1,6 +1,12 @@
 # Bnr::Webhooks
 
-TODO: Write a gem description
+Provides a collection of tools for sending and receiving webhooks. This
+includes:
+
+* Controller for receiving incoming webhooks from other BNR services.
+* Methods for sending webhooks to subscribers
+* Methods for signing and validating signatures in webhooks to confirm they
+come from a trusted party.
 
 ## Installation
 
