@@ -3,10 +3,10 @@
 Provides a collection of tools for sending and receiving webhooks. This
 includes:
 
-* Controller for receiving incoming webhooks from other BNR services.
+* Controller for receiving incoming webhooks from other BNR services
 * Methods for sending webhooks to subscribers
 * Methods for signing and validating signatures in webhooks to confirm they
-come from a trusted party.
+come from a trusted party
 
 ## Installation
 
@@ -39,7 +39,7 @@ end
 
 ### Bring your own subscribers
 
-When sending a webhook you will need to provide a subscriber. Subcribers need to
+When sending a webhook you will need to provide a subscriber. Subscribers need to
 respond to two methods:
 
 * `api_key` - this is a shared secret between the system sending the webhook and
