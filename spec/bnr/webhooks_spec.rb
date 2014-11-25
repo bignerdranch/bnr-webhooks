@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'bnr/webhooks'
 
 describe Bnr::Webhooks do
   context '#configure' do
