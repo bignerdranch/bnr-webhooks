@@ -12,7 +12,7 @@ describe Bnr::Webhooks::Receiver do
   let(:event) { 'widget.destroy' }
   let(:digest) { OpenSSL::Digest.new('sha1') }
   let(:api_key) { 'test_key' }
-  let(:worker) { double("WebhookWorker", process: true) }
+  let(:worker) { double("WebhookWorker", call: true) }
   let(:signature) {
     'sha1='+OpenSSL::HMAC.hexdigest(digest, api_key, source_json) }
   let(:widget_removal) { double('WidgetRemoval')}
@@ -38,7 +38,7 @@ describe Bnr::Webhooks::Receiver do
   context 'asynchronous process' do
     it 'queues up a worker' do
       allow(widget_removal).to receive(:call)
-      expect(worker).to receive(:process).with(widget_removal, event, source)
+      expect(worker).to receive(:call).with(widget_removal, event, source)
       request.process
     end
   end
