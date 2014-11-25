@@ -20,7 +20,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Initialization
+
+Add the following code to an initializer in your Rails application (perhaps
+in `config/initializers/bnr-webhooks.rb`):
+
+```ruby
+Bnr::Webhooks.configure do |config|
+  config.api_key = 'your_api_key'
+end
+```
 
 ## Contributing
 
