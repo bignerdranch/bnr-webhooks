@@ -37,6 +37,15 @@ Bnr::Webhooks.configure do |config|
 end
 ```
 
+### Bring your own subscribers
+
+When sending a webhook you will need to provide a subscriber. Subcribers need to
+respond to two methods:
+
+* `api_key` - this is a shared secret between the system sending the webhook and
+the subscriber
+* `url` - the url the system the subscriber wants webhook requests sent to
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/bnr-webhooks/fork )
