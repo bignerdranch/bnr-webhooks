@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Bnr::Webhooks::VERSION
   spec.authors       = ["Big Nerd Ranch"]
   spec.email         = ["developer@bignerdranch.com"]
-  spec.summary       = %q{Write a short summary. Required.}
-  spec.description   = %q{Write a longer description. Optional.}
+  spec.summary       = %q{Big Nerd Ranch's webhook layer for inter-service communication.}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 
