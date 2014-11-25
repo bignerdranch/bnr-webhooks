@@ -6,6 +6,7 @@ module Bnr
     extend ActiveSupport::Autoload
 
     autoload :Receiver
+    autoload :Dispatcher
 
     mattr_accessor :api_key
     @@api_key = 'fake_key'

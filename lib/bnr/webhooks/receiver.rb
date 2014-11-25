@@ -6,7 +6,7 @@ module Bnr
     class Receiver
       HMAC_DIGEST = OpenSSL::Digest.new('sha1')
 
-      attr_reader :event, :source, :signature, :api_key, :worker, :event_handler
+      attr_reader :event, :source, :signature, :api_key, :worker, :dispatcher
 
       def self.process(source, headers)
         new(source, headers).process
@@ -16,13 +16,13 @@ module Bnr
                      headers,
                      api_key: Bnr::Webhooks.api_key,
                      worker:,
-                     event_directory:)
+                     dispatcher: Bnr::Webhooks::Dispatcher.new)
         @source = source
         @api_key = api_key
         @worker = worker
+        @dispatcher = dispatcher
         @event = headers.fetch('X-BNR-Webhook-Event-Name')
         @signature = headers.fetch('X-BNR-Webhook-Signature')
-        @event_handler = event_directory.fetch(event)
       end
 
       def process(async: true)
@@ -41,12 +41,16 @@ module Bnr
 
       private
 
+      def handler
+        dispatcher.for(event)
+      end
+
       def process_async
-        worker.call(event_handler, event, parsed_source)
+        worker.call(handler, event, parsed_source)
       end
 
       def process_now
-        event_handler.call(event, parsed_source)
+        handler.call(event, parsed_source)
       end
 
       def parsed_source
