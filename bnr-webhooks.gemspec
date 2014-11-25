@@ -6,8 +6,8 @@ require 'bnr/webhooks/version'
 Gem::Specification.new do |spec|
   spec.name          = "bnr-webhooks"
   spec.version       = Bnr::Webhooks::VERSION
-  spec.authors       = ["Jonathan Martin"]
-  spec.email         = ["me@nybblr.com"]
+  spec.authors       = ["Big Nerd Ranch"]
+  spec.email         = ["developer@bignerdranch.com"]
   spec.summary       = %q{TODO: Write a short summary. Required.}
   spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
