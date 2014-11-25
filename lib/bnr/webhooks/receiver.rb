@@ -20,7 +20,7 @@ module Bnr
         @source = source
         @api_key = api_key
         @worker = worker
-        @event  = headers.fetch('X-BNR-Webhook-Event-Name')
+        @event = headers.fetch('X-BNR-Webhook-Event-Name')
         @signature = headers.fetch('X-BNR-Webhook-Signature')
         @event_handler = event_directory.fetch(event)
       end
@@ -42,7 +42,7 @@ module Bnr
       private
 
       def process_async
-        worker.process(event_handler, event, parsed_source)
+        worker.call(event_handler, event, parsed_source)
       end
 
       def process_now
