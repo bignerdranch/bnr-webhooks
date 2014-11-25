@@ -1,6 +1,12 @@
 # Bnr::Webhooks
 
-TODO: Write a gem description
+Provides a collection of tools for sending and receiving webhooks. This
+includes:
+
+* Controller for receiving incoming webhooks from other BNR services
+* Methods for sending webhooks to subscribers
+* Methods for signing and validating signatures in webhooks to confirm they
+come from a trusted party
 
 ## Installation
 
@@ -20,7 +26,25 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Initialization
+
+Add the following code to an initializer in your Rails application (perhaps
+in `config/initializers/bnr-webhooks.rb`):
+
+```ruby
+Bnr::Webhooks.configure do |config|
+  config.api_key = 'your_api_key'
+end
+```
+
+### Bring your own subscribers
+
+When sending a webhook you will need to provide a subscriber. Subscribers need to
+respond to two methods:
+
+* `api_key` - this is a shared secret between the system sending the webhook and
+the subscriber
+* `url` - the url the system the subscriber wants webhook requests sent to
 
 ## Contributing
 
