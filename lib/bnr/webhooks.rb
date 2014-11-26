@@ -8,6 +8,9 @@ module Bnr
     autoload :Receiver
     autoload :Dispatcher
 
+    Error = Class.new(::StandardError)
+    DispatcherNotFound = Class.new(Error)
+
     mattr_accessor :api_key
     @@api_key = 'fake_key'
 
