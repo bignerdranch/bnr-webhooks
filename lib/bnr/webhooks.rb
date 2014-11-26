@@ -5,8 +5,9 @@ module Bnr
   module Webhooks
     extend ActiveSupport::Autoload
 
-    autoload :Receiver
     autoload :Dispatcher
+    autoload :Receiver
+    autoload :Subscriber
 
     Error = Class.new(::StandardError)
     DispatcherNotFound = Class.new(Error)
