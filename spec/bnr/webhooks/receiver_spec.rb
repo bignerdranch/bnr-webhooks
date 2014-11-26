@@ -6,13 +6,14 @@ describe Bnr::Webhooks::Receiver do
                         headers,
                         api_key: api_key,
                         worker: worker,
-                        event_directory: event_directory) }
+                        dispatcher: dispatcher) }
   let(:source) { { "id" => "15" } }
   let(:source_json) { source.to_json }
   let(:event) { 'widget.destroy' }
   let(:digest) { OpenSSL::Digest.new('sha1') }
   let(:api_key) { 'test_key' }
   let(:worker) { double("WebhookWorker", call: true) }
+  let(:dispatcher) { double("Dispatcher") }
   let(:signature) {
     'sha1='+OpenSSL::HMAC.hexdigest(digest, api_key, source_json) }
   let(:widget_removal) { double('WidgetRemoval')}
@@ -22,11 +23,12 @@ describe Bnr::Webhooks::Receiver do
       'X-BNR-Webhook-Signature' => signature
     }
   }
-  let(:event_directory) {
-    {
-      "widget.destroy" => widget_removal
-    }
-  }
+
+  before do
+    allow(dispatcher)
+      .to receive(:for)
+      .with("widget.destroy") { widget_removal }
+  end
 
   context 'synchronous process' do
     it 'executes the proper event handler' do
