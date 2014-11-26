@@ -1,10 +1,9 @@
 require 'json'
-require 'openssl'
 
 module Bnr
   module Webhooks
     class Receiver
-      HMAC_DIGEST = OpenSSL::Digest.new('sha1')
+      include Bnr::Webhooks::Signing
 
       attr_reader :event, :source, :signature, :api_key, :worker, :dispatcher
 
@@ -21,8 +20,9 @@ module Bnr
         @api_key = api_key
         @worker = worker
         @dispatcher = dispatcher
-        @event = headers.fetch('X-BNR-Webhook-Event-Name')
-        @signature = headers.fetch('X-BNR-Webhook-Signature')
+
+        @event     = headers.fetch(Bnr::Webhooks::EVENT_HEADER)
+        @signature = headers.fetch(Bnr::Webhooks::SIGNATURE_HEADER)
       end
 
       def process(async: true)
@@ -58,7 +58,7 @@ module Bnr
       end
 
       def expected_signature
-        'sha1='+OpenSSL::HMAC.hexdigest(HMAC_DIGEST, api_key, source)
+        sign(api_key, source)
       end
 
       def properly_signed?

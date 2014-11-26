@@ -10,12 +10,10 @@ describe Bnr::Webhooks::Receiver do
   let(:source) { { "id" => "15" } }
   let(:source_json) { source.to_json }
   let(:event) { 'widget.destroy' }
-  let(:digest) { OpenSSL::Digest.new('sha1') }
   let(:api_key) { 'test_key' }
   let(:worker) { double("WebhookWorker", call: true) }
   let(:dispatcher) { double("Dispatcher") }
-  let(:signature) {
-    'sha1='+OpenSSL::HMAC.hexdigest(digest, api_key, source_json) }
+  let(:signature) { Bnr::Webhooks::Signing.sign(api_key, source_json) }
   let(:widget_removal) { double('WidgetRemoval')}
   let(:headers) {
     {
