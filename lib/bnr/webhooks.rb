@@ -6,6 +6,7 @@ module Bnr
     extend ActiveSupport::Autoload
 
     autoload :Dispatcher
+    autoload :Notifier
     autoload :Receiver
     autoload :Signing
     autoload :Subscriber
