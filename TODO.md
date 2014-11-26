@@ -5,7 +5,7 @@ Things to do.
 
 Classes to write:
 
-* [ ] Notifier (publishes webhooks)
+* [x] Notifier (publishes webhooks)
 * [x] WebhooksController
 * [x] Dispatcher (routes event names to a proc/class)
 * [ ] Subscriber (responds to `api_key`, `url`, etc.)
