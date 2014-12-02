@@ -8,6 +8,7 @@ module Bnr
     autoload :Dispatcher
     autoload :Receiver
     autoload :Subscriber
+    autoload :Controller
 
     Error = Class.new(::StandardError)
     DispatcherNotFound = Class.new(Error)
