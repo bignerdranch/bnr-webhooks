@@ -6,12 +6,17 @@ module Bnr
     extend ActiveSupport::Autoload
 
     autoload :Dispatcher
+    autoload :Notifier
     autoload :Receiver
+    autoload :Signing
     autoload :Subscriber
     autoload :Controller
 
     Error = Class.new(::StandardError)
     DispatcherNotFound = Class.new(Error)
+
+    EVENT_HEADER     = 'X-BNR-Webhook-Event-Name'
+    SIGNATURE_HEADER = 'X-BNR-Webhook-Signature'
 
     mattr_accessor :api_key
     @@api_key = 'fake_key'
