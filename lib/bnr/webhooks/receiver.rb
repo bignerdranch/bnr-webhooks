@@ -5,6 +5,12 @@ module Bnr
     class Receiver
       include Bnr::Webhooks::Signing
 
+      DEFAULT_WORKER = if defined?(::Sidekiq)
+                         Bnr::Webhooks::SidekiqWorker
+                       else
+                         Bnr::Webhooks::Worker
+                       end
+
       attr_reader :event, :source, :signature, :api_key, :worker, :dispatcher
 
       def self.process(source, headers)
@@ -14,7 +20,7 @@ module Bnr
       def initialize(source,
                      headers,
                      api_key: Bnr::Webhooks.api_key,
-                     worker:,
+                     worker: DEFAULT_WORKER,
                      dispatcher: Bnr::Webhooks::Dispatcher.new)
         @source = source
         @api_key = api_key
@@ -25,14 +31,10 @@ module Bnr
         @signature = headers.fetch(Bnr::Webhooks::SIGNATURE_HEADER)
       end
 
-      def process(async: true)
+      def process
         return unless valid?
 
-        if async
-          process_async
-        else
-          process_now
-        end
+        worker.call(handler, event, parsed_source)
       end
 
       def valid?
@@ -43,14 +45,6 @@ module Bnr
 
       def handler
         dispatcher.for(event)
-      end
-
-      def process_async
-        worker.call(handler, event, parsed_source)
-      end
-
-      def process_now
-        handler.call(event, parsed_source)
       end
 
       def parsed_source

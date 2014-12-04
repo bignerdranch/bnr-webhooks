@@ -5,12 +5,15 @@ module Bnr
   module Webhooks
     extend ActiveSupport::Autoload
 
+    autoload :Controller
     autoload :Dispatcher
     autoload :Notifier
     autoload :Receiver
     autoload :Signing
     autoload :Subscriber
-    autoload :Controller
+
+    autoload :Worker
+    autoload :SidekiqWorker if defined?(::Sidekiq)
 
     Error = Class.new(::StandardError)
     DispatcherNotFound = Class.new(Error)

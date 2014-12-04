@@ -28,10 +28,12 @@ describe Bnr::Webhooks::Receiver do
       .with("widget.destroy") { widget_removal }
   end
 
-  context 'synchronous process' do
+  context 'synchronous/inline process' do
+    let(:worker) { Bnr::Webhooks::Worker }
+
     it 'executes the proper event handler' do
       expect(widget_removal).to receive(:call).with(event, source)
-      request.process(async: false)
+      request.process
     end
   end
 

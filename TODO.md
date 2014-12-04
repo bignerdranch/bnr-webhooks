@@ -9,4 +9,4 @@ Classes to write:
 * [x] WebhooksController
 * [x] Dispatcher (routes event names to a proc/class)
 * [x] Subscriber (responds to `api_key`, `url`, etc.)
-* [ ] Worker (default Sidekiq worker)
+* [x] Worker (default Sidekiq worker)
