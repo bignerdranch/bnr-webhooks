@@ -11,9 +11,7 @@ module Bnr
     autoload :Receiver
     autoload :Signing
     autoload :Subscriber
-
     autoload :Worker
-    autoload :SidekiqWorker if defined?(::Sidekiq)
 
     Error = Class.new(::StandardError)
     DispatcherNotFound = Class.new(Error)

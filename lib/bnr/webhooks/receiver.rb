@@ -5,22 +5,16 @@ module Bnr
     class Receiver
       include Bnr::Webhooks::Signing
 
-      DEFAULT_WORKER = if defined?(::Sidekiq)
-                         Bnr::Webhooks::SidekiqWorker
-                       else
-                         Bnr::Webhooks::Worker
-                       end
-
       attr_reader :event, :source, :signature, :api_key, :worker, :dispatcher
 
-      def self.process(source, headers)
-        new(source, headers).process
+      def self.process(*args, **kwargs)
+        new(*args, **kwargs).process
       end
 
       def initialize(source,
                      headers,
                      api_key: Bnr::Webhooks.api_key,
-                     worker: DEFAULT_WORKER,
+                     worker: Bnr::Webhooks::Worker,
                      dispatcher: Bnr::Webhooks::Dispatcher.new)
         @source = source
         @api_key = api_key
