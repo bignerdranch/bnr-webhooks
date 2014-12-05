@@ -7,14 +7,14 @@ module Bnr
 
       attr_reader :event, :source, :signature, :api_key, :worker, :dispatcher
 
-      def self.process(source, headers)
-        new(source, headers).process
+      def self.process(*args, **kwargs)
+        new(*args, **kwargs).process
       end
 
       def initialize(source,
                      headers,
                      api_key: Bnr::Webhooks.api_key,
-                     worker:,
+                     worker: Bnr::Webhooks::Worker,
                      dispatcher: Bnr::Webhooks::Dispatcher.new)
         @source = source
         @api_key = api_key
@@ -25,14 +25,10 @@ module Bnr
         @signature = headers.fetch(Bnr::Webhooks::SIGNATURE_HEADER)
       end
 
-      def process(async: true)
+      def process
         return unless valid?
 
-        if async
-          process_async
-        else
-          process_now
-        end
+        worker.call(handler, event, parsed_source)
       end
 
       def valid?
@@ -43,14 +39,6 @@ module Bnr
 
       def handler
         dispatcher.for(event)
-      end
-
-      def process_async
-        worker.call(handler, event, parsed_source)
-      end
-
-      def process_now
-        handler.call(event, parsed_source)
       end
 
       def parsed_source

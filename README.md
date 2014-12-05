@@ -37,6 +37,25 @@ Bnr::Webhooks.configure do |config|
 end
 ```
 
+### Add a webhook endpoint
+
+### Handle webhooks in the background
+
+```ruby
+class WebhookWorker < Bnr::Webhooks::Worker
+  include Sidekiq::Worker
+
+  def self.call(handler, event, source)
+    perform_async(handler.to_s, event, source)
+  end
+
+  def perform(handler_name, event, source)
+    handler = handler_name.constantize
+    super(handler, event, source)
+  end
+end
+```
+
 ### Bring your own subscribers
 
 When sending a webhook you will need to provide a subscriber. Subscribers need to
