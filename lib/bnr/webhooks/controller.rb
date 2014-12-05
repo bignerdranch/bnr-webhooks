@@ -19,7 +19,7 @@ module Bnr
       end
 
       def dispatcher
-        Bnr::Webhooks::Dispatcher.new(mapping)
+        Bnr::Webhooks::Dispatcher.new(mapping: mapping)
       end
 
       def mapping
