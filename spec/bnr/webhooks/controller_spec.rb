@@ -1,22 +1,11 @@
 require 'spec_helper'
-require 'ostruct'
+require 'support/controller_methods'
 
 describe Bnr::Webhooks::Controller do
-  let(:controller_methods) {
-    Module.new do
-      def request
-        OpenStruct.new(raw_post: "", headers: {})
-      end
-
-      def head(*args)
-      end
-    end
-  }
   let(:controller) {
-    controller_methods = self.controller_methods
     Class.new do
       include Bnr::Webhooks::Controller
-      include controller_methods
+      include ControllerMethods
     end
   }
   subject(:controller_instance) { controller.new }
@@ -36,10 +25,9 @@ describe Bnr::Webhooks::Controller do
 
     context 'when I specify a worker' do
       let(:controller) {
-        controller_methods = self.controller_methods
         Class.new do
           include Bnr::Webhooks::Controller
-          include controller_methods
+          include ControllerMethods
 
           private
 
