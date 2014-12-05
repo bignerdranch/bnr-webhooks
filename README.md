@@ -39,7 +39,49 @@ end
 
 ### Add a webhook endpoint
 
+You can set up a Rails controller to handle incoming webhooks:
+
+```ruby
+class WebhookController < ApplicationController
+  include Bnr::Webhooks::Controller
+end
+```
+
+You may want to disable various security measures in this controller, such as authenticity tokens. The `Receiver` will handle verification.
+
+After you set up a route, the controller will listen for a `POST` (create) and process the contents with an empty dispatcher. This isn't incredibly useful, so you will want to override defaults to use your own dispatcher:
+
+```ruby
+class WebhookController < ApplicationController
+  include Bnr::Webhooks::Controller
+
+  private
+
+  def dispatcher
+    Bnr::Webhooks::Dispatcher.new(
+      "widgets.destroy" => WidgetRemovalEvent
+    )
+  end
+end
+```
+
+If you are just using a hash for dispatching, you can instead override the `mapping` method:
+
+```ruby
+class WebhookController < ApplicationController
+  include Bnr::Webhooks::Controller
+
+  private
+
+  def mapping
+    { "widgets.destroy" => WidgetRemovalEvent }
+  end
+end
+```
+
 ### Handle webhooks in the background
+
+By default, the webhook controller will use an inline worker. However, it's easy to inject your own (proper) worker so long as it responds to the `call` method (similar to Procs):
 
 ```ruby
 class WebhookWorker < Bnr::Webhooks::Worker
@@ -52,6 +94,20 @@ class WebhookWorker < Bnr::Webhooks::Worker
   def perform(handler_name, event, source)
     handler = handler_name.constantize
     super(handler, event, source)
+  end
+end
+```
+
+Don't forget to specify this worker in your webhook controller:
+
+```ruby
+class WebhookController < ApplicationController
+  include Bnr::Webhooks::Controller
+
+  private
+
+  def worker
+    WebhookWorker
   end
 end
 ```
