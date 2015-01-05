@@ -20,11 +20,11 @@ module Bnr
       end
 
       def notify
+        response = send_to(subscriber.url)
         send_to(debug_endpoint) do |request|
           request.headers[Bnr::Webhooks::DESTINATION_HEADER] = subscriber.url
         end if debug_endpoint?
-
-        send_to(subscriber.url)
+        response
       end
 
       private
