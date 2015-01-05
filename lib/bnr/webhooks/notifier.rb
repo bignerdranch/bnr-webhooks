@@ -20,16 +20,34 @@ module Bnr
       end
 
       def notify
+        response = send_to(subscriber.url)
+        send_to(debug_endpoint) do |request|
+          request.headers[Bnr::Webhooks::DESTINATION_HEADER] = subscriber.url
+        end if debug_endpoint?
+        response
+      end
+
+      private
+
+      def send_to(url)
         http_client.post do |request|
-          request.url subscriber.url
+          request.url url
           request.headers['Content-Type'] = 'application/json'
           request.headers[Bnr::Webhooks::EVENT_HEADER] = event
           request.headers[Bnr::Webhooks::SIGNATURE_HEADER] = signature
           request.body = body
+
+          yield(request) if block_given?
         end
       end
 
-      private
+      def debug_endpoint
+        Bnr::Webhooks.debug_endpoint
+      end
+
+      def debug_endpoint?
+        debug_endpoint.present?
+      end
 
       def body
         source.to_json
