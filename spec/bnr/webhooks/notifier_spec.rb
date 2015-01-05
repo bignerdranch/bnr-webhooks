@@ -15,9 +15,10 @@ describe Bnr::Webhooks::Notifier do
       'X-BNR-Webhook-Signature' => signature
     }
   }
+  let(:stubs) { Faraday::Adapter::Test::Stubs.new }
   let(:http_client) {
     Faraday.new do |builder|
-      builder.adapter :test do |stub|
+      builder.adapter :test, stubs do |stub|
         stub.post(url, nil, headers) { [204, {}, nil] }
       end
     end
@@ -26,6 +27,35 @@ describe Bnr::Webhooks::Notifier do
 
   describe '#notify' do
     subject(:response) { notifier.notify }
+
+    after do
+      stubs.verify_stubbed_calls
+    end
+
     it { should be_success }
+
+    context 'when debug endpoint is provided' do
+      let(:debug_endpoint) { 'https://bignerdranch.com/webhooks/monitor' }
+      let(:debug_headers) { headers.merge(
+        'X-BNR-Webhook-Original-Destination' => url
+      ) }
+      let(:stubs) {
+        Faraday::Adapter::Test::Stubs.new do |stub|
+          stub.post(debug_endpoint, nil, debug_headers) { |env| [200, {}, nil] }
+        end
+      }
+
+      before do
+        Bnr::Webhooks.configure do |config|
+          config.debug_endpoint = debug_endpoint
+        end
+      end
+
+      it { should be_success }
+
+      after do
+        Bnr::Webhooks.defaults!
+      end
+    end
   end
 end
